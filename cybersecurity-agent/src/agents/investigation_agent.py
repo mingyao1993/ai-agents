@@ -1,8 +1,8 @@
 from langchain.tools import tool
 from langchain.agents import create_agent
-
-
 from databricks_langchain import ChatDatabricks
+
+from agents.prompts import INVESTIGATION_AGENT_PROMPT
 
 LLM_ENDPOINT_NAME = "databricks-gpt-oss-20b"
 model = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME)
@@ -63,16 +63,12 @@ def check_ip_reputation(ip: str) -> dict:
 agent = create_agent(
     model,
     tools=[check_ip_reputation],
-    system_prompt="""
-    You are a cybersecurity investigation agent. 
-    Your task is to investigate indicators of compromise (IOCs) such as IP addresses, file hashes, and domain names. 
-    Use the provided tools to validate and analyze these IOCs.
-    """,
+    system_prompt=INVESTIGATION_AGENT_PROMPT,
 )
 
 if __name__ == "__main__":
     from utils.format_messages import pretty_print_messages
-    
+
     # Test run
     test_messages = {
         "messages": [
