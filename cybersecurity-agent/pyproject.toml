@@ -8,3 +8,8 @@ dependencies = [
     "databricks-langchain>=0.12.1",
     "langgraph-supervisor>=0.0.31",
 ]
+
+[dependency-groups]
+dev = [
+    "langgraph-cli[inmem]>=0.4.11",
+]
