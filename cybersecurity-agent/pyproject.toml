@@ -8,6 +8,8 @@ dependencies = [
     "databricks-langchain>=0.12.1",
     "langgraph-supervisor>=0.0.31",
 ]
+[tool.uv]
+package = true
 
 [dependency-groups]
 dev = [
