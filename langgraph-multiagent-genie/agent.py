@@ -92,7 +92,8 @@ def create_langgraph_supervisor(
             agents.append(genie_agent)
         else:
             model = ChatDatabricks(
-                endpoint=agent.endpoint_name, use_responses_api="responses" in agent.task
+                endpoint=agent.endpoint_name,
+                use_responses_api="responses" in agent.task,
             )
             # Disable streaming for subagents for ease of parsing
             model._stream = lambda x: model._stream(**x, stream=False)
@@ -142,7 +143,9 @@ class LangGraphResponsesAgent(ResponsesAgent):
             for event in self.predict_stream(request)
             if event.type == "response.output_item.done"
         ]
-        return ResponsesAgentResponse(output=outputs, custom_outputs=request.custom_inputs)
+        return ResponsesAgentResponse(
+            output=outputs, custom_outputs=request.custom_inputs
+        )
 
     def predict_stream(
         self,
@@ -155,7 +158,9 @@ class LangGraphResponsesAgent(ResponsesAgent):
         seen_ids = set()
 
         # can adjust `recursion_limit` to limit looping: https://docs.langchain.com/oss/python/langgraph/GRAPH_RECURSION_LIMIT#troubleshooting
-        for _, events in self.agent.stream({"messages": cc_msgs}, stream_mode=["updates"]):
+        for _, events in self.agent.stream(
+            {"messages": cc_msgs}, stream_mode=["updates"]
+        ):
             new_msgs = [
                 msg
                 for v in events.values()
@@ -239,3 +244,6 @@ supervisor = create_langgraph_supervisor(llm, EXTERNALLY_SERVED_AGENTS, IN_CODE_
 mlflow.langchain.autolog()
 AGENT = LangGraphResponsesAgent(supervisor)
 mlflow.models.set_model(AGENT)
+
+input_example = {"input": [{"role": "user", "content": "Hi"}]}
+print(AGENT.predict(input_example))
