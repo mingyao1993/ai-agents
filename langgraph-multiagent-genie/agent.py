@@ -60,9 +60,8 @@ TOOLS = []
 def stringify_content(state):
     msgs = state["messages"]
     if isinstance(msgs[-1].content, list):
-        msgs[-1].content = json.dumps(msgs[-1].content, indent=4)
+        msgs[-1].content = json.dumps(msgs[-1].content[-1], indent=4)
     return {"messages": msgs}
-
 
 def create_langgraph_supervisor(
     llm: Runnable,
@@ -150,6 +149,8 @@ class LangGraphResponsesAgent(ResponsesAgent):
         request: ResponsesAgentRequest,
     ) -> Generator[ResponsesAgentStreamEvent, None, None]:
         cc_msgs = to_chat_completions_input([i.model_dump() for i in request.input])
+        print("This is request.input:",request.input)
+        print("This is cc_msgs:",cc_msgs)
         first_message = True
         seen_ids = set()
 
@@ -161,6 +162,7 @@ class LangGraphResponsesAgent(ResponsesAgent):
                 for msg in v.get("messages", [])
                 if msg.id not in seen_ids
             ]
+            print("this is new msgs:", new_msgs)
             if first_message:
                 seen_ids.update(msg.id for msg in new_msgs[: len(cc_msgs)])
                 new_msgs = new_msgs[len(cc_msgs) :]
@@ -175,8 +177,21 @@ class LangGraphResponsesAgent(ResponsesAgent):
                     ),
                 )
             if len(new_msgs) > 0:
+                def format_msg_content(msg):
+                    if isinstance(msg.content, str):
+                        try:
+                            msg.content = json.loads(msg.content)
+                            for item in msg.content:
+                                if item.get("type") == "text":
+                                    msg.content = item["text"]
+                                    break
+                        except (json.JSONDecodeError, TypeError):
+                            pass
+                    return msg
+                new_msgs = [format_msg_content(msg) for msg in new_msgs]
                 yield from output_to_responses_items_stream(new_msgs)
 
+# this is new msgs: [HumanMessage(content='Hi', additional_kwargs={}, response_metadata={}, id='976716e0-7779-4c8b-836d-3f8d478538a8'), AIMessage(content='[{"type": "reasoning", "summary": [{"type": "summary_text", "text": "We have a conversation: user says \\"Hi\\". No earlier messages. The system says you are a supervisor in a multi-agent system, and you must produce a summarized response to the user\'s last query; the last query is \\"Hi\\". There\'s no answer in history. We must decide which agent is best suited to answer \\"Hi\\". Likely a greeting agent. Let\'s refer to list: but no list given. So we need to output a greeting. The user is greeting. So respond appropriately. So best agent likely is the greeting chat. So we output greeting."}]}, {"type": "text", "text": "Hey there! \\ud83d\\udc4b How can I help you today?"}]', additional_kwargs={}, response_metadata={'usage': {'prompt_tokens': 201, 'completion_tokens': 135, 'total_tokens': 336}, 'prompt_tokens': 201, 'completion_tokens': 135, 'total_tokens': 336, 'model': 'gpt-oss-20b-080525', 'model_name': 'gpt-oss-20b-080525', 'finish_reason': 'stop'}, name='supervisor', id='lc_run--019b5828-ce0a-7de1-b0a1-313ae64c948f-0')]
 
 #######################################################
 # Configure the Foundation Model and Serving Sub-Agents
