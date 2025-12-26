@@ -80,9 +80,6 @@ agent = create_agent(
     system_prompt=INVESTIGATION_AGENT_PROMPT,
 )
 
-def create_custom_agent():
-    return agent
-custom_agent = agent
 
 if __name__ == "__main__":
     from utils.format_messages import pretty_print_messages
