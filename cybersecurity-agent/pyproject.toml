@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "databricks-langchain>=0.12.1",
+    "langchain-google-genai>=4.1.2",
+    "langgraph>=1.0.5",
     "langgraph-supervisor>=0.0.31",
 ]
 [tool.uv]

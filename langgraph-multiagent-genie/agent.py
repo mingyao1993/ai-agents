@@ -57,12 +57,6 @@ class InCodeSubAgent(BaseModel):
 TOOLS = []
 
 
-def stringify_content(state):
-    msgs = state["messages"]
-    if isinstance(msgs[-1].content, list):
-        msgs[-1].content = json.dumps(msgs[-1].content[-1], indent=4)
-    return {"messages": msgs}
-
 def create_langgraph_supervisor(
     llm: Runnable,
     externally_served_agents: list[ServedSubAgent] = [],
@@ -102,7 +96,6 @@ def create_langgraph_supervisor(
                     model,
                     tools=[],
                     name=agent.name,
-                    post_model_hook=stringify_content,
                 )
             )
 
@@ -182,6 +175,7 @@ class LangGraphResponsesAgent(ResponsesAgent):
                     ),
                 )
             if len(new_msgs) > 0:
+                
                 def format_msg_content(msg):
                     if isinstance(msg.content, str):
                         try:
