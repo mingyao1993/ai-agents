@@ -110,5 +110,9 @@ def check_ip_reputation(ip: str) -> dict:
     if ip in ABUSEIPDB_API_RESPONSES.keys():
         return ABUSEIPDB_API_RESPONSES[ip]
     else:
-        return "IP address not in database."
+        return {"data": f"{ip} IP address not in database."}
 
+if __name__ == "__main__":
+    # Example usage
+    test_ip = "45.78.219.226"
+    print(check_ip_reputation.invoke(test_ip))

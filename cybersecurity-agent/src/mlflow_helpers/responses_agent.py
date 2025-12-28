@@ -60,17 +60,4 @@ class LangGraphResponsesAgent(ResponsesAgent):
                 )
             if len(new_msgs) > 0:
 
-                def format_msg_content(msg):
-                    if isinstance(msg.content, str):
-                        try:
-                            msg.content = json.loads(msg.content)
-                            for item in msg.content:
-                                if item.get("type") == "text":
-                                    msg.content = item["text"]
-                                    break
-                        except (json.JSONDecodeError, TypeError):
-                            pass
-                    return msg
-
-                new_msgs = [format_msg_content(msg) for msg in new_msgs]
                 yield from output_to_responses_items_stream(new_msgs)
