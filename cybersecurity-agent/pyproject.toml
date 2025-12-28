@@ -3,7 +3,7 @@ name = "cybersecurity-agent"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "databricks-agents>=1.9.0",
     "databricks-langchain>=0.12.1",
@@ -16,5 +16,6 @@ package = true
 
 [dependency-groups]
 dev = [
+    "databricks-connect>=16.1.7",
     "langgraph-cli[inmem]>=0.4.11",
 ]
