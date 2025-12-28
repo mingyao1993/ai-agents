@@ -1,7 +1,3 @@
-import json
-from typing import Generator
-from uuid import uuid4
-
 import mlflow
 
 from config import LLM_ENDPOINT_NAME
