@@ -1,8 +1,8 @@
 import datetime
 import mlflow
 
-# mlflow.set_tracking_uri("databricks")
-# mlflow.set_registry_uri("databricks-uc")
+mlflow.set_tracking_uri("databricks")
+mlflow.set_registry_uri("databricks-uc")
 
 
 
@@ -29,7 +29,7 @@ with mlflow.start_run(run_name=run_name):
   logged_agent_info = mlflow.pyfunc.log_model(
     name="agent",
     python_model=code_path,
-    code_paths=["src"], # include local dependencies
+    code_paths=["src/core", "src/mlflow_helpers"], # include local dependencies
     pip_requirements=["-r requirements.txt"],
   )
 
@@ -38,13 +38,18 @@ with mlflow.start_run(run_name=run_name):
 
 
 # pre-deployment agent validation
+print("Validating logged model...")
 mlflow.models.predict(
     model_uri=f"runs:/{logged_agent_info.run_id}/agent",
     input_data=input_example,
     env_manager="uv",
 )
 
+
+
+
 #### Register the model to Unity Catalog after result is satisfactory
+print("Registering model to Unity Catalog...")
 catalog = "workspace"
 schema = "default"
 model_name = "cybersecurity_agent"
@@ -52,12 +57,15 @@ UC_MODEL_NAME = f"{catalog}.{schema}.{model_name}"
 
 # register the model to UC
 uc_registered_model_info = mlflow.register_model(
-    model_uri=logged_agent_info.model_uri, name=UC_MODEL_NAME
+    model_uri=logged_agent_info.model_uri, 
+    name=UC_MODEL_NAME
 )
 
 
-from databricks import agents
+# Deploy the registered model as a Databricks Agent endpoint
+print("Deploying model as Databricks Agent endpoint...")
 
+from databricks import agents
 agents.deploy(
     endpoint_name="cybersecurity-agent-endpoint",
     model_name=UC_MODEL_NAME,

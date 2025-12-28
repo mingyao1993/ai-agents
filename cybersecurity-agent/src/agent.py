@@ -1,12 +1,12 @@
 import mlflow
 
-from config import LLM_ENDPOINT_NAME
+from core.config import LLM_ENDPOINT_NAME
 from databricks_langchain import ChatDatabricks
 from langchain.agents import create_agent
 from mlflow_helpers.responses_agent import LangGraphResponsesAgent
 
-from prompts import INVESTIGATION_AGENT_PROMPT
-from tools import check_ip_reputation
+from core.prompts import INVESTIGATION_AGENT_PROMPT
+from core.tools import check_ip_reputation
 
 
 model = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME)
