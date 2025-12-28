@@ -33,7 +33,14 @@ cybersecurity_report_judges = [
 # read from eval dataset
 mlflow.set_tracking_uri("databricks")
 mlflow.set_registry_uri("databricks-uc")
+mlflow.set_experiment(
+    "/Shared/cybersecurity-agent-exp"
+)  # set experiment. if not exists, it will be created
+
 EVAL_DATASET_NAME='workspace.default.cybersecurity_agent_eval'
+
+import os
+os.environ["MLFLOW_GENAI_EVAL_SKIP_TRACE_VALIDATION"] = "True" # causing issues in local dev
 
 dataset = mlflow.genai.datasets.get_dataset(name=EVAL_DATASET_NAME)
 
