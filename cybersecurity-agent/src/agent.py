@@ -37,12 +37,13 @@ if __name__ == "__main__":
 
     # Test run
     prompts = [
-        "Investigate the following IP Address: 1.1.1.1",
-        "Investigate the following IP Address: 118.25.6.39",
-        "Investigate the following IP Address: 127.0.0.1",
-        "Investigate the following IP Address: 8.8.8.8",
-        "Investigate the following IP Address: 3.92.45.47",
-        "Investigate the following IP Address: 45.78.219.226",
+        "Hi",
+        # "Investigate the following IP Address: 1.1.1.1",
+        # "Investigate the following IP Address: 118.25.6.39",
+        # "Investigate the following IP Address: 127.0.0.1",
+        # "Investigate the following IP Address: 8.8.8.8",
+        # "Investigate the following IP Address: 3.92.45.47",
+        # "Investigate the following IP Address: 45.78.219.226",
     ]
     for prompt in prompts:
         test_messages = {

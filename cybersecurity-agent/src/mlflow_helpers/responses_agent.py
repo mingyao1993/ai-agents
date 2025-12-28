@@ -1,4 +1,3 @@
-import json
 from typing import Generator
 from uuid import uuid4
 
@@ -32,32 +31,9 @@ class LangGraphResponsesAgent(ResponsesAgent):
         request: ResponsesAgentRequest,
     ) -> Generator[ResponsesAgentStreamEvent, None, None]:
         cc_msgs = to_chat_completions_input([i.model_dump() for i in request.input])
-        first_message = True
-        seen_ids = set()
 
-        # can adjust `recursion_limit` to limit looping: https://docs.langchain.com/oss/python/langgraph/GRAPH_RECURSION_LIMIT#troubleshooting
         for _, events in self.agent.stream(
             {"messages": cc_msgs}, stream_mode=["updates"]
         ):
-            new_msgs = [
-                msg
-                for v in events.values()
-                for msg in v.get("messages", [])
-                if msg.id not in seen_ids
-            ]
-            if first_message:
-                seen_ids.update(msg.id for msg in new_msgs[: len(cc_msgs)])
-                new_msgs = new_msgs[len(cc_msgs) :]
-                first_message = False
-            else:
-                seen_ids.update(msg.id for msg in new_msgs)
-                node_name = tuple(events.keys())[0]  # assumes one name per node
-                yield ResponsesAgentStreamEvent(
-                    type="response.output_item.done",
-                    item=self.create_text_output_item(
-                        text=f"<name>{node_name}</name>", id=str(uuid4())
-                    ),
-                )
-            if len(new_msgs) > 0:
-
-                yield from output_to_responses_items_stream(new_msgs)
+            for node_data in events.values():
+                yield from output_to_responses_items_stream(node_data["messages"])
