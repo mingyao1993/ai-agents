@@ -10,6 +10,7 @@ dependencies = [
     "langchain-google-genai>=4.1.2",
     "langgraph>=1.0.5",
     "langgraph-supervisor>=0.0.31",
+    "pydantic-settings>=2.12.0",
 ]
 [tool.uv]
 package = true

@@ -1,4 +1,6 @@
+import os
 import mlflow
+from core.config import settings
 from mlflow.genai.scorers import (
     RetrievalGroundedness,
     RelevanceToQuery,
@@ -31,22 +33,19 @@ cybersecurity_report_judges = [
 ]
 
 # read from eval dataset
-mlflow.set_tracking_uri("databricks")
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment(
-    "/Shared/cybersecurity-agent-exp"
-)  # set experiment. if not exists, it will be created
+mlflow.set_tracking_uri(settings.MLFLOW_TRACKING_URI)
+mlflow.set_registry_uri(settings.MLFLOW_REGISTRY_URI)
+mlflow.set_experiment(settings.MLFLOW_EXPERIMENT_PATH)
 
-EVAL_DATASET_NAME='workspace.default.cybersecurity_agent_eval'
+EVAL_DATASET_NAME = f"{settings.UC_CATALOG}.{settings.UC_SCHEMA}.cybersecurity_agent_eval"
 
-import os
 os.environ["MLFLOW_GENAI_EVAL_SKIP_TRACE_VALIDATION"] = "True" # causing issues in local dev
 
 dataset = mlflow.genai.datasets.get_dataset(name=EVAL_DATASET_NAME)
 
 def predict_fn(request: dict) -> str:
-    from src.agent import mlflow_agent
-    response = mlflow_agent.predict(request)
+    from agent_system import mlflow_agent_system
+    response = mlflow_agent_system.predict(request)
     return response
 
 

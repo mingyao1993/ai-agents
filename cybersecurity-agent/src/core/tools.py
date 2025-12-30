@@ -1,5 +1,8 @@
+import logging
+from datetime import datetime
 from langchain.tools import tool
 
+logger = logging.getLogger(__name__)
 
 ABUSEIPDB_API_RESPONSES = {
     "118.25.6.39": {
@@ -96,6 +99,17 @@ ABUSEIPDB_API_RESPONSES = {
 
 
 @tool
+def get_current_time() -> str:
+    """
+    Returns the current date and time in ISO format.
+    Use this when the user asks for the current time or date.
+    """
+    now = datetime.now().isoformat()
+    logger.info(f"Tool get_current_time called: {now}")
+    return now
+
+
+@tool
 def check_ip_reputation(ip: str) -> dict:
     """
     Checks the reputation and validity of an IP address using AbuseIPDB data.
@@ -107,12 +121,8 @@ def check_ip_reputation(ip: str) -> dict:
     Returns:
         dict: The response from the AbuseIPDB API.
     """
+    logger.info(f"Tool check_ip_reputation called for IP: {ip}")
     if ip in ABUSEIPDB_API_RESPONSES.keys():
         return ABUSEIPDB_API_RESPONSES[ip]
     else:
         return {"data": f"{ip} IP address not in database."}
-
-if __name__ == "__main__":
-    # Example usage
-    test_ip = "45.78.219.226"
-    print(check_ip_reputation.invoke(test_ip))
