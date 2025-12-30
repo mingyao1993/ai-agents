@@ -7,12 +7,12 @@ class Settings(BaseSettings):
     # MLflow Configuration
     MLFLOW_TRACKING_URI: str = "databricks"
     MLFLOW_REGISTRY_URI: str = "databricks-uc"
-    MLFLOW_EXPERIMENT_PATH: str = "/Shared/cybersecurity-agent-exp"
+    MLFLOW_EXPERIMENT_PATH: str = "/Shared/single-agent-system-exp"
 
     # Unity Catalog Configuration
     UC_CATALOG: str = "workspace"
     UC_SCHEMA: str = "default"
-    UC_MODEL_NAME: str = "cybersecurity_agent"
+    UC_MODEL_NAME: str = "single_agent_system"
 
     # Agent Configuration
     EXTERNALLY_SERVED_AGENTS: list = []

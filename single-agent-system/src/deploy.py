@@ -67,7 +67,7 @@ uc_registered_model_info = mlflow.register_model(
 print("Deploying model as Databricks Agent endpoint...")
 
 agents.deploy(
-    endpoint_name="cybersecurity-agent-endpoint",
+    endpoint_name="single-agent-system-endpoint",
     model_name=FULL_UC_MODEL_NAME,
     model_version=uc_registered_model_info.version,
     deploy_feedback_model=False,

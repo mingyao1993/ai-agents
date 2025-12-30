@@ -1,6 +1,6 @@
-# Cybersecurity Investigation Agent
+# Single Agent System
 
-This project implements a production-ready Cybersecurity Investigation Agent using LangGraph and MLflow, designed for deployment on Databricks.
+This project implements a production-ready Single Agent System (Cybersecurity Investigation) using LangGraph and MLflow, designed for deployment on Databricks.
 
 ## Project Structure
 
