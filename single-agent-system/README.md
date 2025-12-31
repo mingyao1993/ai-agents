@@ -10,9 +10,13 @@ This project implements a Single Agent System (Cybersecurity Investigation) usin
 - **Python 3.11+** and [`uv`](https://github.com/astral-sh/uv) for dependency management.
 - **Make**: Used for automating development tasks and running the project's `Makefile` commands.
 
-## AgentOps Lifecycle: Dev to Deployment
+## Development Lifecycle
 
-This repository facilitates the end-to-end lifecycle of an AI Agent on the Databricks platform:
+This repository facilitates the developmentlifecycle of an AI Agent on the Databricks platform:
+
+<p align="center">
+  <img src="docs/lifecycle.png" alt="AgentOps Lifecycle" width="300">
+</p>
 
 1. **Development (Local)**:
     - Iterate on agent logic using **LangGraph** for state management.
@@ -57,7 +61,7 @@ The agent can take a suspicious IP address and perform a multi-step investigatio
 To ensure the system is runnable out-of-the-box without requiring external API keys (like VirusTotal or AlienVault), the tools in `src/core/tools.py` currently use **mocked responses**.
 
 - The IP reputation tool returns predefined JSON payloads for specific test IPs.
-- This allows for consistent integration testing and demonstration of the AgentOps lifecycle without external dependencies.
+- This allows for consistent integration testing and demonstration of the development lifecycle without external dependencies.
 
 ## Setup
 
