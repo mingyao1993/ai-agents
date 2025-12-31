@@ -2,6 +2,7 @@
 mlruns/
 mlflow.db
 .langgraph_api
+requirements.txt
 
 
 # Byte-compiled / optimized / DLL files

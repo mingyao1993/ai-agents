@@ -11,7 +11,7 @@ def create_agent_system() -> CompiledStateGraph:
     """
     Factory function to create the cybersecurity investigation agent.
     """
-    model = ChatDatabricks(endpoint=settings.LLM_ENDPOINT_NAME)
+    model = ChatDatabricks(endpoint=settings.DBX_LLM_ENDPOINT_NAME)
 
     tools = [check_ip_reputation, get_current_time]
 
