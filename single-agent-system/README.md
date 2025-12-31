@@ -14,19 +14,18 @@ This project implements a Single Agent System (Cybersecurity Investigation) usin
 
 This repository facilitates the end-to-end lifecycle of an AI Agent on the Databricks platform:
 
-1.  **Development (Local)**:
+1. **Development (Local)**:
     - Iterate on agent logic using **LangGraph** for state management.
     - Define tools in `src/core/tools.py` and prompts in `src/core/prompts.py`.
     - Use `langgraph dev` for a local visual debugger and the [LangChain Agent Chat UI](https://docs.langchain.com/oss/python/langchain/ui) to visualise agent interactions.
-2.  **Testing & Evaluation**:
+2. **Testing & Evaluation**:
     - **Unit Tests**: Validate individual tool logic.
     - **Integration Tests**: Use **LLM-as-a-judge** to evaluate agent trajectories and responses against ground truth datasets. Results are logged to the MLflow experiment, enabling review within Databricks as a first-class citizen of the platform.
-3.  **Logging & Versioning**:
+3. **Logging & Versioning**:
     - Use **MLflow** to log the agent code, configuration, and dependencies as a "Model".
     - Register the model in **Unity Catalog** for governance and version control.
-4.  **Deployment**:
+4. **Deployment**:
     - Deploy the registered model to a **Mosaic AI Agent Framework** endpoint that handles scaling and security.
-
 
 ## Project Structure
 
@@ -45,14 +44,18 @@ This repository facilitates the end-to-end lifecycle of an AI Agent on the Datab
 The agent is designed as a **Cybersecurity Investigation Assistant**. It follows a ReAct (Reasoning and Acting) pattern to help analysts investigate potential security threats.
 
 ### Use Case: IP Investigation
+
 The agent can take a suspicious IP address and perform a multi-step investigation to determine its risk level and origin. It uses its reasoning capabilities to decide which tool to call based on the information gathered.
 
 ### Tools
+
 - **IP Reputation Check**: Queries a database (mocked) to retrieve safety scores, known associations with malware, and geographical information for a given IP.
 - **Current Time**: Provides the agent with the current UTC time to help contextualise logs and event timestamps.
 
 ### Mocking & Data
-To ensure the system is runnable out-of-the-box without requiring external API keys (like VirusTotal or AlienVault), the tools in `src/core/tools.py` currently use **mocked responses**. 
+
+To ensure the system is runnable out-of-the-box without requiring external API keys (like VirusTotal or AlienVault), the tools in `src/core/tools.py` currently use **mocked responses**.
+
 - The IP reputation tool returns predefined JSON payloads for specific test IPs.
 - This allows for consistent integration testing and demonstration of the AgentOps lifecycle without external dependencies.
 
